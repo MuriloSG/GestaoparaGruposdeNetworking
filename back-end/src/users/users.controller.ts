@@ -23,11 +23,17 @@ export class UsersController {
 
   @Get()
   findAll(@CurrentUser() user: JwtPayload) {
+    if (!user.is_admin) {
+      throw new UnauthorizedException('Acesso negado. Apenas administradores podem listar todos os usuários.');
+    }
     return this.usersService.findAll();
   }
 
   @Get(':id')
   findOne(@Param('id') id: string, @CurrentUser() user: JwtPayload) {
+    if (!user.is_admin && user.sub !== +id) {
+      throw new UnauthorizedException('Você só pode visualizar seu próprio perfil');
+    }
     return this.usersService.findOne(+id);
   }
 
@@ -44,7 +50,13 @@ export class UsersController {
   }
 
   @Delete(':id')
-  remove(@Param('id') id: string) {
+  remove(@Param('id') id: string, @CurrentUser() user: JwtPayload) {
+    if (!user.is_admin) {
+      throw new UnauthorizedException('Apenas administradores podem remover usuários');
+    }
+    if (user.sub === +id) {
+      throw new UnauthorizedException('Você não pode remover seu próprio usuário');
+    }
     return this.usersService.remove(+id);
   }
 }

@@ -33,5 +33,22 @@ model Group {
   created_at  DateTime @default(now()) @db.Timestamptz()
 
   admin       User     @relation(fields: [admin_id], references: [id])
+
+  membershipIntentions MembershipIntention[]
+}
+
+model MembershipIntention {
+  id         Int      @id @default(autoincrement())
+  full_name  String
+  email      String
+  phone      String?
+  company    String?
+  position   String?
+  group_id   Int
+  status     String   @default("pending") // pending, approved, rejected
+  token      String? 
+  created_at DateTime @default(now()) @db.Timestamptz()
+
+  group      Group    @relation(fields: [group_id], references: [id])
 }
 

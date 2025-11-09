@@ -1,6 +1,6 @@
 import { User } from '@prisma/client';
-import { CreateUserDto } from '../dto/create-user.dto';
 import { UpdateUserDto } from '../dto/update-user.dto';
+import { CreateUserDto } from '../dto/create-user.dto';
 
 export type CreateUserData = Omit<CreateUserDto, 'password'> & {
   password_hash: string;

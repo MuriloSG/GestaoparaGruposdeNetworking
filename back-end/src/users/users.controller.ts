@@ -1,4 +1,4 @@
-import { Controller, Get, Post, Body, Patch, Param, Delete, UseGuards } from '@nestjs/common';
+import { Controller, Get, Post, Body, Patch, Param, Delete, UseGuards, UnauthorizedException } from '@nestjs/common';
 import { UsersService } from './users.service';
 import { CreateUserDto } from './dto/create-user.dto';
 import { UpdateUserDto } from './dto/update-user.dto';
@@ -37,7 +37,7 @@ export class UsersController {
     @CurrentUser() user,
   ) {
     if (user.id !== +id) {
-      throw new Error('Você só pode atualizar seu próprio perfil');
+      throw new UnauthorizedException('Você só pode atualizar seu próprio perfil');
     }
     return this.usersService.update(+id, updateUserDto);
   }
